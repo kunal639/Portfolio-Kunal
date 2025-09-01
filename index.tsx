@@ -1,3 +1,4 @@
+// Copied from app/page.tsx so you can reuse outside Next.js if needed.
 "use client";
 
 import type React from "react";
@@ -13,9 +14,9 @@ import {
   Award,
   Calendar,
 } from "lucide-react";
-import { Card, CardContent } from "./components/ui/card";
-import { Button } from "./components/ui/button";
-import { Badge } from "./components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 // ==========================
 // CONFIG — Edit these fields
@@ -55,19 +56,7 @@ const SKILLS = {
   ],
 };
 
-type Project = {
-  title: string;
-  subtitle?: string;
-  description: string;
-  tech: string[];
-  links?: {
-    github?: string;
-    demo?: string;
-  };
-  highlights?: string[];
-};
-
-const PROJECTS: Project[] = [
+const PROJECTS = [
   {
     title: "Smart Jupyter Launcher with AI Features",
     subtitle:
@@ -141,129 +130,134 @@ const PROJECTS: Project[] = [
 // ==========================
 // UI Helpers
 // ==========================
-type LucideIconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
-
-function Section({
-  id,
-  title,
-  icon: Icon,
-  children,
-}: {
+type SectionProps = {
   id: string;
   title: string;
-  icon?: LucideIconType;
+  icon?: React.ComponentType<{ className?: string }>;
   children: React.ReactNode;
-}) {
-  return (
-    <section id={id} className="py-16 md:py-24 scroll-mt-24">
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="mb-8 flex items-center gap-3">
-          {Icon && (
-            <div className="rounded-2xl bg-gray-100 p-2 shadow-sm">
-              <Icon className="h-5 w-5" />
-            </div>
-          )}
-          <h2 className="text-2xl font-bold tracking-tight md:text-3xl">
-            {title}
-          </h2>
-        </div>
-        {children}
+};
+
+const Section = ({ id, title, icon: Icon, children }: SectionProps) => (
+  <section id={id} className="py-16 md:py-24 scroll-mt-24">
+    <div className="max-w-6xl mx-auto px-4">
+      <div className="flex items-center gap-3 mb-8">
+        {Icon && (
+          <div className="p-2 rounded-2xl bg-gray-100 shadow-sm">
+            <Icon className="w-5 h-5" />
+          </div>
+        )}
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
+          {title}
+        </h2>
       </div>
-    </section>
-  );
-}
+      {children}
+    </div>
+  </section>
+);
 
-function ProjectCard({ project }: { project: Project }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4 }}
-    >
-      <Card className="rounded-2xl shadow-sm transition-shadow hover:shadow-md">
-        <CardContent className="p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-            <div className="flex-1">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-xl font-semibold">{project.title}</h3>
-                  {project.subtitle ? (
-                    <p className="mt-1 text-sm text-gray-600">
-                      {project.subtitle}
-                    </p>
-                  ) : null}
-                </div>
-                <div className="shrink-0 flex gap-2">
-                  {project.links?.github && project.links.github !== "#" && (
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="rounded-xl bg-transparent"
+type ProjectLinks = {
+  github?: string;
+  demo?: string;
+};
+
+type Project = {
+  title: string;
+  subtitle: string;
+  description: string;
+  tech: string[];
+  links?: ProjectLinks;
+  highlights?: string[];
+};
+
+type ProjectCardProps = {
+  project: Project;
+};
+
+const ProjectCard = ({ project }: ProjectCardProps) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.4 }}
+  >
+    <Card className="rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+      <CardContent className="p-6">
+        <div className="flex flex-col lg:flex-row lg:items-start gap-4">
+          <div className="flex-1">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-xl font-semibold">{project.title}</h3>
+                <p className="text-sm text-gray-600 mt-1">{project.subtitle}</p>
+              </div>
+              <div className="flex gap-2 shrink-0">
+                {project.links?.github && project.links.github !== "#" && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="rounded-xl bg-transparent"
+                  >
+                    <a
+                      href={project.links.github}
+                      target="_blank"
+                      rel="noreferrer"
                     >
-                      <a
-                        href={project.links.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Github className="mr-2 h-4 w-4" /> Code
-                      </a>
-                    </Button>
-                  )}
-                  {project.links?.demo && (
-                    <Button asChild className="rounded-xl">
-                      <a
-                        href={project.links.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="mr-2 h-4 w-4" /> Demo
-                      </a>
-                    </Button>
-                  )}
-                </div>
+                      <Github className="w-4 h-4 mr-2" /> Code
+                    </a>
+                  </Button>
+                )}
+                {project.links?.demo && (
+                  <Button asChild className="rounded-xl">
+                    <a
+                      href={project.links.demo}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <ExternalLink className="w-4 h-4 mr-2" /> Demo
+                    </a>
+                  </Button>
+                )}
               </div>
+            </div>
 
-              <p className="mt-4 leading-relaxed text-gray-800">
-                {project.description}
-              </p>
+            <p className="mt-4 text-gray-800 leading-relaxed">
+              {project.description}
+            </p>
 
-              {project.highlights?.length ? (
-                <ul className="mt-4 list-disc space-y-1 pl-5 text-gray-700">
-                  {project.highlights.map((h, i) => (
-                    <li key={i}>{h}</li>
-                  ))}
-                </ul>
-              ) : null}
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                {project.tech.map((t) => (
-                  <Badge key={t} variant="secondary" className="rounded-xl">
-                    {t}
-                  </Badge>
+            {project.highlights?.length ? (
+              <ul className="mt-4 list-disc pl-5 text-gray-700 space-y-1">
+                {project.highlights.map((h, i) => (
+                  <li key={i}>{h}</li>
                 ))}
-              </div>
+              </ul>
+            ) : null}
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {project.tech.map((t) => (
+                <Badge key={t} variant="secondary" className="rounded-xl">
+                  {t}
+                </Badge>
+              ))}
             </div>
           </div>
-        </CardContent>
-      </Card>
-    </motion.div>
-  );
-}
+        </div>
+      </CardContent>
+    </Card>
+  </motion.div>
+);
 
 // ==========================
-// App Component
+// Component (same as Next.js page)
 // ==========================
-export default function App() {
+export default function Portfolio() {
   return (
     <div className="min-h-screen bg-white text-gray-900">
       {/* HEADER */}
-      <header className="sticky top-0 z-40 border-b bg-white/70 backdrop-blur">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+      <header className="sticky top-0 backdrop-blur bg-white/70 border-b z-40">
+        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
           <a href="#home" className="font-semibold tracking-tight">
             {PROFILE.name}
           </a>
-          <nav className="hidden items-center gap-6 text-sm md:flex">
+          <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#about" className="hover:opacity-70">
               About
             </a>
@@ -280,7 +274,7 @@ export default function App() {
               <a
                 href={PROFILE.resumeUrl}
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noreferrer"
                 className="hover:opacity-70"
               >
                 Resume
@@ -293,12 +287,8 @@ export default function App() {
               variant="outline"
               className="rounded-xl bg-transparent"
             >
-              <a
-                href={PROFILE.github}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github className="mr-2 h-4 w-4" /> GitHub
+              <a href={PROFILE.github} target="_blank" rel="noreferrer">
+                <Github className="w-4 h-4 mr-2" /> GitHub
               </a>
             </Button>
           </div>
@@ -307,34 +297,30 @@ export default function App() {
 
       {/* HERO */}
       <section id="home" className="pt-16 md:pt-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 md:grid-cols-12">
+        <div className="max-w-6xl mx-auto px-4 grid md:grid-cols-12 gap-8 items-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
             className="md:col-span-7"
           >
-            <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm">
-              <Shield className="h-4 w-4" /> AI for Cybersecurity
+            <div className="inline-flex items-center gap-2 px-3 py-1 border rounded-full text-sm">
+              <Shield className="w-4 h-4" /> AI for Cybersecurity
             </div>
-            <h1 className="mt-4 text-3xl font-bold tracking-tight md:text-5xl">
+            <h1 className="mt-4 text-3xl md:text-5xl font-bold tracking-tight">
               {PROFILE.name}
             </h1>
-            <p className="mt-2 text-lg text-gray-700 md:text-xl">
+            <p className="mt-2 text-lg md:text-xl text-gray-700">
               {PROFILE.tagline}
             </p>
-            <p className="mt-4 max-w-2xl leading-relaxed text-gray-800">
+            <p className="mt-4 text-gray-800 leading-relaxed max-w-2xl">
               {PROFILE.bio}
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               {PROFILE.resumeUrl !== "#" && (
                 <Button asChild className="rounded-xl">
-                  <a
-                    href={PROFILE.resumeUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <Award className="mr-2 h-4 w-4" /> View Resume
+                  <a href={PROFILE.resumeUrl} target="_blank" rel="noreferrer">
+                    <Award className="w-4 h-4 mr-2" /> View Resume
                   </a>
                 </Button>
               )}
@@ -344,7 +330,7 @@ export default function App() {
                 className="rounded-xl bg-transparent"
               >
                 <a href={`mailto:${PROFILE.email}`}>
-                  <Mail className="mr-2 h-4 w-4" /> Contact
+                  <Mail className="w-4 h-4 mr-2" /> Contact
                 </a>
               </Button>
               <Button
@@ -352,12 +338,8 @@ export default function App() {
                 variant="outline"
                 className="rounded-xl bg-transparent"
               >
-                <a
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Linkedin className="mr-2 h-4 w-4" /> LinkedIn
+                <a href={PROFILE.linkedin} target="_blank" rel="noreferrer">
+                  <Linkedin className="w-4 h-4 mr-2" /> LinkedIn
                 </a>
               </Button>
             </div>
@@ -372,29 +354,29 @@ export default function App() {
             <Card className="rounded-2xl shadow-sm">
               <CardContent className="p-6">
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="rounded-xl border p-3">
+                  <div className="p-3 border rounded-xl">
                     <div className="flex items-center gap-2 font-medium">
-                      <Brain className="h-4 w-4" /> Focus
+                      <Brain className="w-4 h-4" /> Focus
                     </div>
                     <p className="mt-2 text-gray-700">DS × Cybersecurity</p>
                   </div>
-                  <div className="rounded-xl border p-3">
+                  <div className="p-3 border rounded-xl">
                     <div className="flex items-center gap-2 font-medium">
-                      <Cpu className="h-4 w-4" /> Strength
+                      <Cpu className="w-4 h-4" /> Strength
                     </div>
                     <p className="mt-2 text-gray-700">End‑to‑end builder</p>
                   </div>
-                  <div className="rounded-xl border p-3">
+                  <div className="p-3 border rounded-xl">
                     <div className="flex items-center gap-2 font-medium">
-                      <Award className="h-4 w-4" /> Credentials
+                      <Award className="w-4 h-4" /> Credentials
                     </div>
                     <p className="mt-2 text-gray-700">
                       Postman API Student Expert
                     </p>
                   </div>
-                  <div className="rounded-xl border p-3">
+                  <div className="p-3 border rounded-xl">
                     <div className="flex items-center gap-2 font-medium">
-                      <Calendar className="h-4 w-4" /> Semester
+                      <Calendar className="w-4 h-4" /> Semester
                     </div>
                     <p className="mt-2 text-gray-700">4th (≈664 days left)</p>
                   </div>
@@ -406,9 +388,9 @@ export default function App() {
       </section>
 
       <Section id="about" title="About Me" icon={Shield}>
-        <div className="grid gap-6 md:grid-cols-12">
+        <div className="grid md:grid-cols-12 gap-6">
           <div className="md:col-span-8">
-            <p className="leading-relaxed text-gray-800">
+            <p className="text-gray-800 leading-relaxed">
               I love building practical tools that people can actually use. My
               current focus is applying data science and ML to security
               problems—threat intel signals, faster triage, and developer‑first
@@ -428,7 +410,7 @@ export default function App() {
       </Section>
 
       <Section id="skills" title="Skills" icon={Brain}>
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid md:grid-cols-3 gap-6">
           <Card className="rounded-2xl">
             <CardContent className="p-6">
               <h3 className="font-semibold">Languages</h3>
@@ -478,10 +460,10 @@ export default function App() {
 
       <Section id="contact" title="Contact" icon={Mail}>
         <Card className="rounded-2xl">
-          <CardContent className="flex flex-col items-start justify-between gap-4 p-6 md:flex-row md:items-center md:gap-6">
+          <CardContent className="p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6 justify-between">
             <div>
               <h3 className="text-lg font-semibold">Let’s talk</h3>
-              <p className="mt-1 text-gray-700">
+              <p className="text-gray-700 mt-1">
                 Open to internships, collaborations, and impactful DS ×
                 Cybersecurity work.
               </p>
@@ -493,7 +475,7 @@ export default function App() {
                 className="rounded-xl bg-transparent"
               >
                 <a href={`mailto:${PROFILE.email}`}>
-                  <Mail className="mr-2 h-4 w-4" /> Email
+                  <Mail className="w-4 h-4 mr-2" /> Email
                 </a>
               </Button>
               <Button
@@ -501,21 +483,13 @@ export default function App() {
                 variant="outline"
                 className="rounded-xl bg-transparent"
               >
-                <a
-                  href={PROFILE.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Linkedin className="mr-2 h-4 w-4" /> LinkedIn
+                <a href={PROFILE.linkedin} target="_blank" rel="noreferrer">
+                  <Linkedin className="w-4 h-4 mr-2" /> LinkedIn
                 </a>
               </Button>
               <Button asChild className="rounded-xl">
-                <a
-                  href={PROFILE.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Github className="mr-2 h-4 w-4" /> GitHub
+                <a href={PROFILE.github} target="_blank" rel="noreferrer">
+                  <Github className="w-4 h-4 mr-2" /> GitHub
                 </a>
               </Button>
             </div>
@@ -523,8 +497,8 @@ export default function App() {
         </Card>
       </Section>
 
-      <footer className="border-t py-10">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-gray-600">
+      <footer className="py-10 border-t">
+        <div className="max-w-6xl mx-auto px-4 text-sm text-center text-gray-600">
           © {new Date().getFullYear()} {PROFILE.name}. Built with React,
           Tailwind, shadcn/ui, and discipline.
         </div>

@@ -1,12 +1,27 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>React + TypeScript + Replit</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Portfolio</title>
+    Tailwind via CDN so styling works without a build step
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Tailwind config: keep it minimal and enable class-based dark mode if desired
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            container: { center: true, padding: "1rem" },
+          },
+        },
+      };
+    </script>
   </head>
-  <body>
+  <body class="min-h-screen bg-white text-gray-900 antialiased">
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
   </body>
