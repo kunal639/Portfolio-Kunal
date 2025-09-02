@@ -108,20 +108,24 @@ const PROJECTS: Project[] = [
       "Planned plugin-style modules",
     ],
   },
-  {
-    title: "Malicious Domain/IP Checker",
-    subtitle: "Quick threat lookups using AbuseIPDB to flag risky indicators",
-    description:
-      "CLI/Script that queries AbuseIPDB to assess IPs/domains for potential abuse, enabling rapid triage in security workflows.",
-    tech: ["Python", "Requests", "AbuseIPDB", "JSON"],
-    links: {
-      github: "#", // TODO: add repo link if public
-    },
-    highlights: [
-      "Batch and single-lookups",
-      "Simple risk signal for fast judgment",
-    ],
+{
+  title: "Taskline",
+  subtitle: "A persistent and minimalist to-do tracker with strike-through toggling",
+  description:
+    "A React Native mobile app that goes beyond the typical to-do list by adding task persistence and completion toggling. Built as a foundation for a scalable personal productivity tool.",
+  tech: ["React Native", "Expo", "AsyncStorage", "JavaScript"],
+  links: {
+    github: "https://github.com/kunal639/Taskline", // TODO: replace with your repo link
   },
+  highlights: [
+    "Tasks persist across app restarts using AsyncStorage",
+    "Tap to toggle tasks as complete/incomplete with visual feedback",
+    "Long-press to delete tasks instantly",
+    "Clean, responsive UI with FlatList for performance",
+    "Built with scalability in mind (filters, due dates, reminders can be added next)",
+  ],
+},
+
   {
     title: "Emotion Detection (Yuvakriti)",
     subtitle:
